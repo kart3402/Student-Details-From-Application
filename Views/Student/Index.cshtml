@@ -1,0 +1,186 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <link href="~/CSS.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <title>Index</title>
+
+
+    <script>
+        $(document).ready(function () {
+            display();
+            $('#btn').click(function () {
+                Add();
+            })
+        })
+        function display() {
+            $.ajax({
+
+                url: 'https://localhost:44339/Student/stud ',
+                method: 'get',
+                contentType: 'application/json',
+                success: function (resp) {
+                    $.each(resp, function (i, d) {
+                        $('#tt').append("<tr><td>" + d.Stud_Roll + "</td><td>" + d.Stud_Name + "</td><td>" + d.Stud_DOB + "</td><td>" + d.Stud_Mail + "</td><td>" + d.Stud_Gender + "</td><td>" + d.Stud_Language + "</td><td>" + "<input type='button' value='Clear' onclick='Delete(" + d.Stud_Roll + ")'" + "</td></tr>");
+                    })
+                }
+            })
+        }
+        function Add() {
+            var id = $("#roll").val();
+            var name = $("#name").val();
+            var date = $("#date").val();
+            var mail = $("#mail").val();
+            var gender = $("#gen").val();
+            var lang = $("#La").val();
+            var st = { "Stud_Roll": id, "Stud_Name": name, "Stud_DOB": date, "Stud_Mail": mail, "Stud_Gender": gender, "Stud_Language": lang };
+            $.ajax({
+                url: 'https://localhost:44339/Student/AddStudent/',
+                method: 'post',
+                data: JSON.stringify(st),
+                contentType: 'application/json',
+                success: function (resp) {
+                    alert(resp)
+
+                }
+
+            })
+        }
+        function View(r) {
+            $.ajax({
+                url: 'https://localhost:44339/Student/Studentget/' + r,
+                method: 'get',
+                contentType: 'application/json',
+                success: function (resp) {
+                    console.log(resp);
+                    $("#roll").val(resp.Stud_Roll);
+                    $("#name").val(resp.Stud_Name);
+                    $("#date").val(resp.Stud_DOB);
+                    $("#mail").val(resp.Stud_Mail);
+                    $("#gen").val(resp.Stud_Gender);
+                    $("#La").val(resp.Stud_Language);
+
+
+
+                }
+
+            })
+        }
+        function Delete(d) {
+            var y = $('#roll').val();
+            $.ajax({
+                url: 'https://localhost:44339/Student/DeleteStudent/' + d,
+                method: 'get',
+                contentType: 'application/json',
+                success: function (resp) {
+                    alert(resp);
+                    display();
+                }
+
+            })
+        }
+
+    </script>
+</head>
+<body>
+    <div>
+            <table border="3"    id="stud" class="table table-striped">
+                <tr>
+                    <h1 id="he">Student Details Form</h1>
+                    <br />
+                </tr>
+                <tr>
+                    <td>
+                        Stuent Roll No:
+                        <input type="text" id="roll" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Student Name:
+                        <input type="text" id="name" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Student DOB:
+                        <input type="date" id="date" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Student Email:
+                        <input type="text" id="mail" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Student Gender:
+                        <input type="radio" id="gen" value="Male" />Male
+                        <input type="radio" id="gen" value="Female" />Female
+
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        Student Language:
+
+                        <select id="La">
+                            <option selected>Choose Language</option>
+                            <option value="English">English</option>
+                            <option value="Hindi">Hindi</option>
+                            <option value="Marathi">Marathi</option>
+
+
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br />
+                        <input type="submit" id="btn" value="Submit" style="margin-left:35%" />
+
+                    </td>
+                </tr>
+
+            </table>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <table border="5" id="ta" class="table table-striped">
+                <thead>
+                    <tr>
+                        <h1 id="hea">Student Details Table</h1>
+                        <br />
+                    </tr>
+                    <tr>
+                        <th>Student Roll&nbsp;&nbsp;</th>
+                        <th>Student Name&nbsp;&nbsp;</th>
+                        <th>Student DOB&nbsp;&nbsp;</th>
+                        <th>Student Email&nbsp;&nbsp;</th>
+                        <th>Student Gender&nbsp;&nbsp;</th>
+                        <th>Student Language&nbsp;&nbsp;</th>
+                        <th>Clear Data</th>
+                    </tr>
+                </thead>
+                <tbody id="tt">
+                </tbody>
+
+            </table>
+    </div>
+</body>
+</html>
+
